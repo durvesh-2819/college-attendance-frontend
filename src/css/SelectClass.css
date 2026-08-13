@@ -1,0 +1,772 @@
+/* =========================================================
+   SELECT CLASS - PREMIUM DESIGN
+========================================================= */
+
+.select-class-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 45px 50px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(99, 102, 241, 0.08),
+      transparent 30%
+    ),
+    #f7f7f8;
+  color: #171717;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
+
+.select-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.select-glow-one {
+  top: -120px;
+  right: 5%;
+  background: rgba(99, 102, 241, 0.18);
+}
+
+.select-glow-two {
+  bottom: -150px;
+  left: -100px;
+  background: rgba(14, 165, 233, 0.12);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.select-class-header {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.select-heading {
+  max-width: 720px;
+}
+
+.page-label {
+  display: inline-block;
+
+  margin-bottom: 12px;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+
+  color: #6366f1;
+}
+
+.select-heading h1 {
+  margin: 0;
+
+  font-size: clamp(35px, 4vw, 54px);
+  line-height: 1.05;
+
+  font-weight: 850;
+  letter-spacing: -2.5px;
+
+  color: #111111;
+}
+
+.select-heading h1 span {
+  color: #4f46e5;
+}
+
+.select-heading p {
+  margin-top: 16px;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  color: #666666;
+}
+
+
+/* =========================================================
+   CLASS COUNT
+========================================================= */
+
+.class-count {
+  min-width: 155px;
+
+  padding: 20px 22px;
+
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.78);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.06);
+
+  backdrop-filter: blur(15px);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.class-count:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+.class-count span {
+  display: block;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+
+  color: #777777;
+}
+
+.class-count strong {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 34px;
+  line-height: 1;
+
+  color: #111111;
+}
+
+.class-count small {
+  display: block;
+
+  margin-top: 7px;
+
+  font-size: 10px;
+  color: #999999;
+}
+
+
+/* =========================================================
+   CLASS GRID
+========================================================= */
+
+.class-grid {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+
+/* =========================================================
+   CLASS CARD
+========================================================= */
+
+.class-card {
+  position: relative;
+
+  min-height: 260px;
+
+  padding: 27px;
+
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(248, 248, 250, 0.9)
+    );
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.055);
+
+  transition:
+    transform 0.35s cubic-bezier(.2,.8,.2,1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.class-card::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 25%,
+      rgba(99, 102, 241, 0.08),
+      transparent 75%
+    );
+
+  transform: translateX(-100%);
+
+  transition: transform 0.7s ease;
+}
+
+.class-card:hover::before {
+  transform: translateX(100%);
+}
+
+.class-card:hover {
+  transform: translateY(-9px);
+
+  border-color: rgba(79, 70, 229, 0.25);
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.11);
+}
+
+.class-card.selected {
+  border-color: #6366f1;
+
+  box-shadow:
+    0 20px 60px rgba(79, 70, 229, 0.16);
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.class-card-top {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+}
+
+.class-icon {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  background: #111111;
+
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: 1px;
+
+  box-shadow:
+    0 12px 25px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 0.35s ease,
+    border-radius 0.35s ease;
+}
+
+.class-card:hover .class-icon {
+  transform: rotate(-5deg) scale(1.08);
+
+  border-radius: 21px;
+}
+
+.class-number {
+  margin-left: 14px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  color: #b0b0b0;
+}
+
+.class-arrow {
+  margin-left: auto;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f0f0f2;
+
+  color: #222222;
+
+  font-size: 18px;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.class-card:hover .class-arrow {
+  transform: translate(3px, -3px);
+
+  background: #111111;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   CARD INFO
+========================================================= */
+
+.class-info {
+  position: relative;
+  z-index: 2;
+
+  margin-top: 28px;
+}
+
+.class-tag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+
+  color: #6366f1;
+}
+
+.class-info h2 {
+  margin: 8px 0 6px;
+
+  font-size: 32px;
+  font-weight: 850;
+  letter-spacing: -1px;
+
+  color: #111111;
+}
+
+.class-info p {
+  max-width: 420px;
+
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #777777;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+========================================================= */
+
+.class-footer {
+  position: absolute;
+
+  left: 27px;
+  right: 27px;
+  bottom: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-top: 18px;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+
+  z-index: 2;
+}
+
+.student-total {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.student-total strong {
+  font-size: 18px;
+  font-weight: 850;
+
+  color: #111111;
+}
+
+.student-total span {
+  font-size: 11px;
+
+  color: #888888;
+}
+
+.view-text {
+  font-size: 11px;
+  font-weight: 800;
+
+  color: #555555;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.class-card:hover .view-text {
+  color: #4f46e5;
+
+  transform: translateX(4px);
+}
+
+
+/* =========================================================
+   SELECTED CLASS BAR
+========================================================= */
+
+.selected-class-bar {
+  position: relative;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-top: 28px;
+  padding: 22px 25px;
+
+  border: 1px solid rgba(79, 70, 229, 0.16);
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95),
+      rgba(244, 244, 255, 0.95)
+    );
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.07);
+
+  animation: selectedBar 0.4s ease both;
+}
+
+@keyframes selectedBar {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selected-class-info > span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.8px;
+
+  color: #6366f1;
+}
+
+.selected-class-info h3 {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 850;
+
+  color: #111111;
+}
+
+.selected-class-info small {
+  margin-left: 8px;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  color: #777777;
+}
+
+.selected-class-action {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.selected-students {
+  text-align: right;
+}
+
+.selected-students strong {
+  display: block;
+
+  font-size: 21px;
+  color: #111111;
+}
+
+.selected-students span {
+  font-size: 9px;
+  color: #888888;
+}
+
+.selected-class-action button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 13px 19px;
+
+  border: none;
+  border-radius: 13px;
+
+  background: #111111;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.15);
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.selected-class-action button:hover {
+  transform: translateY(-3px);
+
+  background: #4f46e5;
+
+  box-shadow:
+    0 14px 30px rgba(79, 70, 229, 0.25);
+}
+
+.selected-class-action button span {
+  font-size: 17px;
+
+  transition: transform 0.3s ease;
+}
+
+.selected-class-action button:hover span {
+  transform: translateX(4px);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .select-class-page {
+    padding: 35px 25px;
+  }
+
+  .class-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .select-class-header {
+    align-items: flex-start;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .select-class-page {
+    min-height: 100vh;
+
+    padding: 25px 15px 30px;
+
+    overflow-x: hidden;
+  }
+
+  .select-class-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+  }
+
+  .page-label {
+    font-size: 8px;
+    letter-spacing: 1.7px;
+  }
+
+  .select-heading h1 {
+    font-size: 34px;
+    letter-spacing: -1.7px;
+  }
+
+  .select-heading p {
+    margin-top: 12px;
+
+    font-size: 12px;
+  }
+
+  .class-count {
+    width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+  }
+
+  .class-grid {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
+  }
+
+  .class-card {
+    min-height: 245px;
+
+    padding: 22px;
+
+    border-radius: 20px;
+  }
+
+  .class-icon {
+    width: 55px;
+    height: 55px;
+
+    border-radius: 16px;
+  }
+
+  .class-info {
+    margin-top: 25px;
+  }
+
+  .class-info h2 {
+    font-size: 29px;
+  }
+
+  .class-info p {
+    font-size: 12px;
+  }
+
+  .class-footer {
+    left: 22px;
+    right: 22px;
+    bottom: 20px;
+  }
+
+  .selected-class-bar {
+    flex-direction: column;
+    align-items: stretch;
+
+    padding: 19px;
+
+    gap: 18px;
+
+    border-radius: 18px;
+  }
+
+  .selected-class-info h3 {
+    font-size: 20px;
+  }
+
+  .selected-class-info small {
+    display: block;
+
+    margin: 5px 0 0;
+
+    line-height: 1.5;
+  }
+
+  .selected-class-action {
+    justify-content: space-between;
+
+    gap: 10px;
+  }
+
+  .selected-students {
+    text-align: left;
+  }
+
+  .selected-class-action button {
+    flex: 1;
+
+    justify-content: center;
+  }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .select-class-page {
+    padding: 20px 12px 25px;
+  }
+
+  .select-heading h1 {
+    font-size: 30px;
+  }
+
+  .class-card {
+    padding: 19px;
+
+    min-height: 235px;
+  }
+
+  .class-footer {
+    left: 19px;
+    right: 19px;
+  }
+
+  .selected-class-action {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .selected-class-action button {
+    width: 100%;
+  }
+
+}

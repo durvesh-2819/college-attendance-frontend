@@ -1,0 +1,900 @@
+/* =========================================================
+   STUDENTS PAGE
+   Premium • Professional • Responsive
+========================================================= */
+
+.students-page {
+  min-height: 100vh;
+  padding: 45px 50px;
+
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(37, 99, 235, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 5% 90%,
+      rgba(99, 102, 241, 0.05),
+      transparent 25%
+    ),
+    #f7f8fc;
+
+  font-family: "Inter", sans-serif;
+  color: #111827;
+
+  animation: pageEnter 0.55s ease both;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.students-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+
+  margin-bottom: 35px;
+
+  animation: slideDown 0.65s ease both;
+}
+
+.page-label {
+  display: inline-block;
+
+  color: #2563eb;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 4px;
+}
+
+.students-header h1 {
+  margin: 8px 0 5px;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 38px;
+  font-weight: 800;
+
+  letter-spacing: -1.5px;
+
+  color: #111827;
+
+  line-height: 1.15;
+}
+
+.students-header p {
+  margin: 0;
+
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.back-class-btn {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 12px 18px;
+
+  border: 1px solid #e2e6ed;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  color: #1f2937;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+
+  overflow: hidden;
+}
+
+.back-class-btn::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(37, 99, 235, 0.08),
+    transparent
+  );
+
+  transition: left 0.55s ease;
+}
+
+.back-class-btn:hover::before {
+  left: 120%;
+}
+
+.back-class-btn:hover {
+  color: #2563eb;
+
+  border-color: #2563eb;
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 28px rgba(37, 99, 235, 0.12);
+}
+
+.back-class-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.students-summary {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 18px;
+
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  position: relative;
+
+  padding: 22px 23px;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  border: 1px solid #e9edf3;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.045);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+
+  animation: cardReveal 0.7s ease both;
+}
+
+.summary-card:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.summary-card:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.summary-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 70px;
+  height: 70px;
+
+  right: -25px;
+  bottom: -30px;
+
+  border-radius: 50%;
+
+  background: rgba(37, 99, 235, 0.06);
+
+  transition: transform 0.4s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-6px);
+
+  border-color: #dbe4f2;
+
+  box-shadow:
+    0 20px 42px rgba(15, 23, 42, 0.09);
+}
+
+.summary-card:hover::after {
+  transform: scale(1.5);
+}
+
+.summary-card span {
+  display: block;
+
+  color: #6b7280;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+}
+
+.summary-card strong {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #111827;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 27px;
+  font-weight: 800;
+
+  letter-spacing: -0.5px;
+}
+
+
+/* =========================================================
+   STUDENT TABLE CONTAINER
+========================================================= */
+
+.students-container {
+  background: rgba(255, 255, 255, 0.97);
+
+  border: 1px solid #e9edf3;
+
+  border-radius: 22px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 15px 40px rgba(15, 23, 42, 0.055);
+
+  animation: tableReveal 0.8s ease both;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.table-header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 24px 25px;
+
+  border-bottom: 1px solid #eef0f4;
+}
+
+.table-header span {
+  color: #6b7280;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.table-header h2 {
+  margin: 5px 0 0;
+
+  color: #111827 !important;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.student-count {
+  padding: 8px 13px;
+
+  border-radius: 50px;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  border: 1px solid #dbeafe;
+
+  transition: 0.3s ease;
+}
+
+.student-count:hover {
+  transform: scale(1.05);
+
+  background: #dbeafe;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+table {
+  width: 100%;
+
+  min-width: 950px;
+
+  border-collapse: collapse;
+}
+
+thead {
+  background: #fafbfc;
+}
+
+th {
+  padding: 15px 20px;
+
+  text-align: left;
+
+  color: #6b7280;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+
+  white-space: nowrap;
+}
+
+td {
+  padding: 16px 20px;
+
+  border-top: 1px solid #f0f2f5;
+
+  vertical-align: middle;
+}
+
+tbody tr {
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+tbody tr:hover {
+  background: #f9fbff;
+}
+
+
+/* =========================================================
+   ROLL NUMBER
+========================================================= */
+
+.roll-number {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 30px;
+  height: 27px;
+
+  padding: 0 7px;
+
+  border-radius: 8px;
+
+  background: #f3f4f6;
+
+  color: #374151;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  transition: 0.3s ease;
+}
+
+tbody tr:hover .roll-number {
+  background: #e0ecff;
+
+  color: #2563eb;
+
+  transform: scale(1.06);
+}
+
+
+/* =========================================================
+   STUDENT INFO
+========================================================= */
+
+.student-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 180px;
+}
+
+.student-avatar {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #eef2ff
+    );
+
+  color: #1d4ed8;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  border: 1px solid #dbeafe;
+
+  transition:
+    transform 0.35s ease,
+    background 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+tbody tr:hover .student-avatar {
+  background: #2563eb;
+
+  color: white;
+
+  transform:
+    scale(1.08)
+    rotate(-2deg);
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.22);
+}
+
+.student-info strong {
+  display: block;
+
+  color: #111827;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.student-info small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #6b7280;
+
+  font-size: 9px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   TABLE TEXT
+========================================================= */
+
+.table-text {
+  color: #374151;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ATTENDANCE BUTTON
+========================================================= */
+
+.attendance-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-width: 145px;
+
+  padding: 9px 13px;
+
+  border: 1px solid #dbeafe;
+
+  border-radius: 10px;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  font-family: inherit;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  white-space: nowrap;
+}
+
+.attendance-btn:hover {
+  background: #2563eb;
+
+  border-color: #2563eb;
+
+  color: white;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 22px rgba(37, 99, 235, 0.22);
+}
+
+.attendance-btn:active {
+  transform: scale(0.96);
+}
+
+.attendance-btn span {
+  transition: transform 0.3s ease;
+}
+
+.attendance-btn:hover span {
+  transform: translateX(4px);
+}
+
+
+/* =========================================================
+   ATTENDANCE MARKED
+========================================================= */
+
+.attendance-marked {
+  background: #ecfdf5 !important;
+
+  border-color: #bbf7d0 !important;
+
+  color: #047857 !important;
+
+  cursor: default !important;
+
+  box-shadow: none !important;
+}
+
+.attendance-marked:hover {
+  background: #ecfdf5 !important;
+
+  color: #047857 !important;
+
+  transform: none !important;
+
+  box-shadow: none !important;
+}
+
+
+/* =========================================================
+   EMPTY PAGE
+========================================================= */
+
+.empty-students {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100vh;
+
+  text-align: center;
+}
+
+.empty-students h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.empty-students p {
+  margin: 8px 0 20px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.empty-students button {
+  padding: 11px 18px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.empty-students button:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.22);
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+@keyframes tableReveal {
+  from {
+    opacity: 0;
+
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .students-page {
+    padding: 35px 25px;
+  }
+
+  .students-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .students-header h1 {
+    font-size: 33px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .students-page {
+    padding: 25px 15px;
+  }
+
+  .students-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+  }
+
+  .students-header h1 {
+    font-size: 29px;
+
+    letter-spacing: -1px;
+  }
+
+  .students-header p {
+    font-size: 12px;
+
+    line-height: 1.6;
+  }
+
+  .back-class-btn {
+    width: 100%;
+
+    padding: 12px;
+  }
+
+
+  /* Summary */
+
+  .students-summary {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+  }
+
+  .summary-card {
+    padding: 18px 20px;
+
+    border-radius: 15px;
+  }
+
+  .summary-card strong {
+    font-size: 24px;
+  }
+
+
+  /* Table */
+
+  .students-container {
+    border-radius: 17px;
+  }
+
+  .table-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 20px;
+  }
+
+  .table-header h2 {
+    font-size: 17px;
+  }
+
+  .student-count {
+    align-self: flex-start;
+  }
+
+  th {
+    padding: 13px 15px;
+  }
+
+  td {
+    padding: 14px 15px;
+  }
+
+  table {
+    min-width: 950px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .students-page {
+    padding: 20px 11px;
+  }
+
+  .students-header h1 {
+    font-size: 26px;
+  }
+
+  .page-label {
+    font-size: 9px;
+
+    letter-spacing: 1.5px;
+  }
+
+  .summary-card {
+    padding: 16px;
+  }
+
+  .student-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+}
