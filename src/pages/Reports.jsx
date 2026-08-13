@@ -7,34 +7,51 @@ function Reports() {
 
   const [search, setSearch] = useState("");
   const [selectedClass, setSelectedClass] = useState("All");
-
   const [reportType, setReportType] = useState("Daily");
 
-  // Today's date
   const today = new Date().toISOString().split("T")[0];
 
   const [selectedDate, setSelectedDate] = useState(today);
-
   const [reportGenerated, setReportGenerated] = useState(false);
+
+  // =====================================================
+  // BACKEND URL
+  // =====================================================
+
+  const API_URL =
+    "https://college-attendance-backend-gkah.onrender.com";
 
   // =====================================================
   // GET ATTENDANCE DATA
   // =====================================================
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/attendance")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          setAttendance(data.attendance);
-        }
+    const loadAttendance = async () => {
+      try {
+        setLoading(true);
 
-        setLoading(false);
-      })
-      .catch((error) => {
+        const response = await fetch(
+          `${API_URL}/api/attendance`
+        );
+
+        const data = await response.json();
+
+        console.log("REPORT API DATA:", data);
+
+        if (data.success) {
+          setAttendance(data.attendance || []);
+        } else {
+          setAttendance([]);
+        }
+      } catch (error) {
         console.error("Reports Error:", error);
+        setAttendance([]);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    loadAttendance();
   }, []);
 
   // =====================================================
@@ -43,23 +60,53 @@ function Reports() {
 
   const classes = [
     "All",
-    ...new Set(
-      attendance
-        .map((item) => item.className)
-        .filter(Boolean)
-    ),
+    "CSE",
+    "IT",
+    "AI & DS",
+    "ENTC",
   ];
 
   // =====================================================
-  // DATE HELPERS
+  // FORMAT DATE
   // =====================================================
 
   const formatDateForExcel = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    const month = String(
+      date.getMonth() + 1
+    ).padStart(2, "0");
+
     const year = date.getFullYear();
 
     return `${day}-${month}-${year}`;
+  };
+
+  // =====================================================
+  // PARSE EXCEL DATE
+  // DD-MM-YYYY
+  // =====================================================
+
+  const parseExcelDate = (dateString) => {
+    if (!dateString) {
+      return null;
+    }
+
+    const parts = String(dateString).split("-");
+
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    const day = Number(parts[0]);
+    const month = Number(parts[1]) - 1;
+    const year = Number(parts[2]);
+
+    return new Date(
+      year,
+      month,
+      day
+    );
   };
 
   // =====================================================
@@ -67,45 +114,72 @@ function Reports() {
   // =====================================================
 
   const isDateInReport = (itemDate) => {
-    if (!selectedDate) return false;
-
-    const selected = new Date(`${selectedDate}T00:00:00`);
-
-    // ---------------------------------------------
-    // DAILY
-    // ---------------------------------------------
-
-    if (reportType === "Daily") {
-      return itemDate === formatDateForExcel(selected);
+    if (!selectedDate) {
+      return false;
     }
 
-    // ---------------------------------------------
+    const selected = new Date(
+      `${selectedDate}T00:00:00`
+    );
+
+    // =================================================
+    // DAILY
+    // =================================================
+
+    if (reportType === "Daily") {
+      return (
+        itemDate ===
+        formatDateForExcel(selected)
+      );
+    }
+
+    // =================================================
     // WEEKLY
-    // ---------------------------------------------
+    // =================================================
 
     if (reportType === "Weekly") {
       const startDate = new Date(selected);
 
       const day = startDate.getDay();
 
-      const difference = day === 0 ? -6 : 1 - day;
+      const difference =
+        day === 0
+          ? -6
+          : 1 - day;
 
       startDate.setDate(
         startDate.getDate() + difference
       );
 
-      const endDate = new Date(startDate);
+      startDate.setHours(
+        0,
+        0,
+        0,
+        0
+      );
+
+      const endDate = new Date(
+        startDate
+      );
 
       endDate.setDate(
         endDate.getDate() + 6
       );
 
-      const [dayPart, monthPart, yearPart] =
-        itemDate.split("-");
-
-      const item = new Date(
-        `${yearPart}-${monthPart}-${dayPart}T00:00:00`
+      endDate.setHours(
+        23,
+        59,
+        59,
+        999
       );
+
+      const item = parseExcelDate(
+        itemDate
+      );
+
+      if (!item) {
+        return false;
+      }
 
       return (
         item >= startDate &&
@@ -113,18 +187,23 @@ function Reports() {
       );
     }
 
-    // ---------------------------------------------
+    // =================================================
     // MONTHLY
-    // ---------------------------------------------
+    // =================================================
 
     if (reportType === "Monthly") {
-      const [dayPart, monthPart, yearPart] =
-        itemDate.split("-");
+      const item = parseExcelDate(
+        itemDate
+      );
+
+      if (!item) {
+        return false;
+      }
 
       return (
-        Number(monthPart) ===
-          selected.getMonth() + 1 &&
-        Number(yearPart) ===
+        item.getMonth() ===
+          selected.getMonth() &&
+        item.getFullYear() ===
           selected.getFullYear()
       );
     }
@@ -136,27 +215,63 @@ function Reports() {
   // FILTER ATTENDANCE
   // =====================================================
 
-  const filteredAttendance = attendance.filter((item) => {
-    const matchesSearch =
-      item.studentName
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-      String(item.rollNo).includes(search);
+  const filteredAttendance =
+    attendance.filter((item) => {
 
-    const matchesClass =
-      selectedClass === "All" ||
-      item.className === selectedClass;
+      // -------------------------------------------------
+      // SEARCH
+      // -------------------------------------------------
 
-    const matchesDate =
-      !reportGenerated ||
-      isDateInReport(item.date);
+      const studentName =
+        String(
+          item.studentName || ""
+        ).toLowerCase();
 
-    return (
-      matchesSearch &&
-      matchesClass &&
-      matchesDate
-    );
-  });
+      const rollNo =
+        String(
+          item.rollNo || ""
+        );
+
+      const searchText =
+        search.toLowerCase();
+
+      const matchesSearch =
+        studentName.includes(
+          searchText
+        ) ||
+        rollNo.includes(
+          searchText
+        );
+
+      // -------------------------------------------------
+      // CLASS
+      // -------------------------------------------------
+
+      const itemClass =
+        String(
+          item.className || ""
+        ).trim();
+
+      const matchesClass =
+        selectedClass === "All" ||
+        itemClass === selectedClass;
+
+      // -------------------------------------------------
+      // DATE
+      // -------------------------------------------------
+
+      const matchesDate =
+        !reportGenerated ||
+        isDateInReport(
+          item.date
+        );
+
+      return (
+        matchesSearch &&
+        matchesClass &&
+        matchesDate
+      );
+    });
 
   // =====================================================
   // GENERATE REPORT
@@ -187,24 +302,39 @@ function Reports() {
   // =====================================================
 
   const downloadPDF = async () => {
-    if (filteredAttendance.length === 0) {
-      alert("No attendance records available.");
+    if (
+      filteredAttendance.length === 0
+    ) {
+      alert(
+        "No attendance records available."
+      );
+
       return;
     }
 
     try {
-      const { jsPDF } = await import("jspdf");
+      const { jsPDF } =
+        await import("jspdf");
+
       const autoTable =
-        (await import("jspdf-autotable")).default;
+        (
+          await import(
+            "jspdf-autotable"
+          )
+        ).default;
 
       const doc = new jsPDF();
 
-      // ---------------------------------------------
+      // =================================================
       // HEADER
-      // ---------------------------------------------
+      // =================================================
 
       doc.setFontSize(18);
-      doc.setFont("helvetica", "bold");
+
+      doc.setFont(
+        "helvetica",
+        "bold"
+      );
 
       doc.text(
         "COLLEGE ATTENDANCE MANAGEMENT SYSTEM",
@@ -213,7 +343,11 @@ function Reports() {
       );
 
       doc.setFontSize(11);
-      doc.setFont("helvetica", "normal");
+
+      doc.setFont(
+        "helvetica",
+        "normal"
+      );
 
       doc.text(
         getReportTitle(),
@@ -231,20 +365,22 @@ function Reports() {
         34
       );
 
-      // ---------------------------------------------
-      // TABLE
-      // ---------------------------------------------
+      // =================================================
+      // TABLE DATA
+      // =================================================
 
       const tableRows =
-        filteredAttendance.map((item) => [
-          item.date,
-          item.time,
-          item.className,
-          item.rollNo,
-          item.studentName,
-          item.gender,
-          item.status,
-        ]);
+        filteredAttendance.map(
+          (item) => [
+            item.date || "-",
+            item.time || "-",
+            item.className || "-",
+            item.rollNo || "-",
+            item.studentName || "-",
+            item.gender || "-",
+            item.status || "-",
+          ]
+        );
 
       autoTable(doc, {
         startY: 42,
@@ -274,7 +410,11 @@ function Reports() {
         },
 
         alternateRowStyles: {
-          fillColor: [245, 247, 250],
+          fillColor: [
+            245,
+            247,
+            250,
+          ],
         },
 
         margin: {
@@ -283,12 +423,13 @@ function Reports() {
         },
       });
 
-      // ---------------------------------------------
+      // =================================================
       // FOOTER
-      // ---------------------------------------------
+      // =================================================
 
       const finalY =
-        doc.lastAutoTable.finalY + 10;
+        doc.lastAutoTable.finalY +
+        10;
 
       doc.setFontSize(9);
 
@@ -298,15 +439,30 @@ function Reports() {
         finalY
       );
 
+      // =================================================
+      // FILE NAME
+      // =================================================
+
+      const className =
+        selectedClass === "All"
+          ? "All_Classes"
+          : selectedClass.replace(
+              /&/g,
+              "and"
+            );
+
       doc.save(
-        `Attendance_Report_${reportType}_${selectedClass}.pdf`
+        `Attendance_Report_${reportType}_${className}.pdf`
       );
 
     } catch (error) {
-      console.error("PDF Error:", error);
+      console.error(
+        "PDF Error:",
+        error
+      );
 
       alert(
-        "PDF download failed. Please check PDF packages."
+        "PDF download failed. Please check jspdf and jspdf-autotable packages."
       );
     }
   };
@@ -318,7 +474,9 @@ function Reports() {
   return (
     <div className="reports-page">
 
-      {/* HEADER */}
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <div className="reports-header">
 
@@ -333,8 +491,8 @@ function Reports() {
           </h1>
 
           <p>
-            Generate daily, weekly and monthly
-            attendance reports.
+            Generate daily, weekly and
+            monthly attendance reports.
           </p>
 
         </div>
@@ -354,7 +512,9 @@ function Reports() {
       </div>
 
 
-      {/* REPORT CONTROLS */}
+      {/* =================================================
+          REPORT GENERATOR
+      ================================================= */}
 
       <div className="report-generator">
 
@@ -373,7 +533,9 @@ function Reports() {
 
         <div className="generator-controls">
 
-          {/* CLASS */}
+          {/* =================================================
+              CLASS
+          ================================================= */}
 
           <div className="control-group">
 
@@ -384,30 +546,40 @@ function Reports() {
             <select
               value={selectedClass}
               onChange={(e) => {
-                setSelectedClass(e.target.value);
-                setReportGenerated(false);
+
+                setSelectedClass(
+                  e.target.value
+                );
+
+                setReportGenerated(
+                  false
+                );
               }}
             >
 
-              {classes.map((className) => (
+              {classes.map(
+                (className) => (
 
-                <option
-                  key={className}
-                  value={className}
-                >
-                  {className === "All"
-                    ? "All Classes"
-                    : className}
-                </option>
+                  <option
+                    key={className}
+                    value={className}
+                  >
+                    {className === "All"
+                      ? "All Classes"
+                      : className}
+                  </option>
 
-              ))}
+                )
+              )}
 
             </select>
 
           </div>
 
 
-          {/* REPORT TYPE */}
+          {/* =================================================
+              REPORT TYPE
+          ================================================= */}
 
           <div className="control-group">
 
@@ -418,8 +590,14 @@ function Reports() {
             <select
               value={reportType}
               onChange={(e) => {
-                setReportType(e.target.value);
-                setReportGenerated(false);
+
+                setReportType(
+                  e.target.value
+                );
+
+                setReportGenerated(
+                  false
+                );
               }}
             >
 
@@ -440,7 +618,9 @@ function Reports() {
           </div>
 
 
-          {/* DATE */}
+          {/* =================================================
+              DATE
+          ================================================= */}
 
           <div className="control-group">
 
@@ -452,22 +632,36 @@ function Reports() {
               type="date"
               value={selectedDate}
               onChange={(e) => {
-                setSelectedDate(e.target.value);
-                setReportGenerated(false);
+
+                setSelectedDate(
+                  e.target.value
+                );
+
+                setReportGenerated(
+                  false
+                );
               }}
             />
 
           </div>
 
 
-          {/* GENERATE */}
+          {/* =================================================
+              GENERATE
+          ================================================= */}
 
           <button
             className="generate-report-btn"
-            onClick={generateReport}
+            onClick={
+              generateReport
+            }
           >
             Generate Report
-            <span>→</span>
+
+            <span>
+              →
+            </span>
+
           </button>
 
         </div>
@@ -475,20 +669,26 @@ function Reports() {
       </div>
 
 
-      {/* SEARCH */}
+      {/* =================================================
+          SEARCH
+      ================================================= */}
 
       <div className="reports-controls">
 
         <div className="search-box">
 
-          <span>⌕</span>
+          <span>
+            ⌕
+          </span>
 
           <input
             type="text"
             placeholder="Search student or roll number..."
             value={search}
             onChange={(e) =>
-              setSearch(e.target.value)
+              setSearch(
+                e.target.value
+              )
             }
           />
 
@@ -497,7 +697,9 @@ function Reports() {
       </div>
 
 
-      {/* REPORT TABLE */}
+      {/* =================================================
+          REPORT TABLE
+      ================================================= */}
 
       <div className="reports-container">
 
@@ -521,16 +723,25 @@ function Reports() {
           <div className="report-actions">
 
             <div className="record-count">
+
               {filteredAttendance.length}
-              {" "}Records
+
+              {" "}
+
+              Records
+
             </div>
 
+
             {reportGenerated &&
-              filteredAttendance.length > 0 && (
+              filteredAttendance.length >
+                0 && (
 
                 <button
                   className="download-pdf-btn"
-                  onClick={downloadPDF}
+                  onClick={
+                    downloadPDF
+                  }
                 >
                   ↓ Download PDF
                 </button>
@@ -542,49 +753,72 @@ function Reports() {
         </div>
 
 
-        {/* CONTENT */}
+        {/* =================================================
+            LOADING
+        ================================================= */}
 
         {loading ? (
 
           <div className="reports-loading">
+
             Loading attendance...
+
           </div>
 
         ) : !reportGenerated ? (
 
+          /* =================================================
+             BEFORE REPORT GENERATION
+          ================================================= */
+
           <div className="reports-empty">
 
-            <div>📊</div>
+            <div>
+              📊
+            </div>
 
             <h3>
               Generate a Report
             </h3>
 
             <p>
-              Select class, report type and date,
-              then click Generate Report.
+              Select class, report type
+              and date, then click
+              Generate Report.
             </p>
 
           </div>
 
-        ) : filteredAttendance.length === 0 ? (
+        ) : filteredAttendance.length ===
+          0 ? (
+
+          /* =================================================
+             NO DATA
+          ================================================= */
 
           <div className="reports-empty">
 
-            <div>📋</div>
+            <div>
+              📋
+            </div>
 
             <h3>
               No Attendance Records
             </h3>
 
             <p>
-              No attendance was found for the
-              selected class and date.
+              No attendance was found
+              for the selected class
+              and date.
             </p>
 
           </div>
 
         ) : (
+
+          /* =================================================
+             TABLE
+          ================================================= */
 
           <div className="reports-table-wrapper">
 
@@ -632,31 +866,53 @@ function Reports() {
                 {filteredAttendance.map(
                   (item, index) => (
 
-                    <tr key={index}>
+                    <tr
+                      key={`${item.date}-${item.rollNo}-${index}`}
+                    >
+
+                      {/* DATE */}
 
                       <td>
-                        {item.date}
+                        {item.date || "-"}
                       </td>
 
+
+                      {/* TIME */}
+
                       <td>
-                        {item.time}
+                        {item.time || "-"}
                       </td>
+
+
+                      {/* CLASS */}
 
                       <td>
 
                         <span className="class-badge">
-                          {item.className}
+
+                          {item.className ||
+                            "-"}
+
                         </span>
 
                       </td>
+
+
+                      {/* ROLL NO */}
 
                       <td>
 
                         <span className="report-roll">
-                          {item.rollNo}
+
+                          {item.rollNo ||
+                            "-"}
+
                         </span>
 
                       </td>
+
+
+                      {/* STUDENT */}
 
                       <td>
 
@@ -665,35 +921,52 @@ function Reports() {
                           <div className="report-avatar">
 
                             {item.studentName
-                              ?.charAt(0)
+                              ?.charAt(
+                                0
+                              )
                               .toUpperCase()}
 
                           </div>
 
                           <strong>
-                            {item.studentName}
+
+                            {item.studentName ||
+                              "-"}
+
                           </strong>
 
                         </div>
 
                       </td>
 
+
+                      {/* GENDER */}
+
                       <td>
-                        {item.gender}
+                        {item.gender ||
+                          "-"}
                       </td>
 
+
+                      {/* STATUS */}
+
                       <td>
 
-                        {item.status === "Present" ? (
+                        {item.status ===
+                        "Present" ? (
 
                           <span className="status-present">
+
                             ✓ Present
+
                           </span>
 
                         ) : (
 
                           <span className="status-absent">
+
                             × Absent
+
                           </span>
 
                         )}
