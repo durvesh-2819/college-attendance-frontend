@@ -1,4 +1,10 @@
-const API_URL = "https://college-attendance-backend-gkah.onrender.com";
+// ==========================================
+// BACKEND API URL
+// ==========================================
+
+const API_URL =
+  "https://college-attendance-backend-gkah.onrender.com";
+
 
 // ==========================================
 // TEST BACKEND
@@ -11,8 +17,14 @@ export const testBackend = async () => {
     const data = await response.json();
 
     return data;
+
   } catch (error) {
-    console.error("Backend connection error:", error);
+
+    console.error(
+      "Backend connection error:",
+      error
+    );
+
     throw error;
   }
 };
@@ -22,33 +34,53 @@ export const testBackend = async () => {
 // TEACHER LOGIN
 // ==========================================
 
-export const teacherLogin = async (email, password) => {
+export const teacherLogin = async (
+  email,
+  password
+) => {
+
   try {
-    const response = await fetch(`${API_URL}/api/login`, {
-      method: "POST",
 
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await fetch(
+      `${API_URL}/api/teacher-login`,
+      {
+        method: "POST",
 
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      }
+    );
+
 
     const data = await response.json();
 
+
     if (!response.ok) {
+
       throw new Error(
-        data.message || "Login failed"
+        data.message ||
+        "Invalid username or password"
       );
+
     }
+
 
     return data;
 
+
   } catch (error) {
-    console.error("Teacher Login Error:", error);
+
+    console.error(
+      "Teacher Login Error:",
+      error
+    );
+
     throw error;
   }
 };
@@ -91,7 +123,9 @@ export const markAttendance = async (
       }
     );
 
+
     const data = await response.json();
+
 
     if (!response.ok) {
 
@@ -102,7 +136,9 @@ export const markAttendance = async (
 
     }
 
+
     return data;
+
 
   } catch (error) {
 
@@ -117,7 +153,7 @@ export const markAttendance = async (
 
 
 // ==========================================
-// GET ATTENDANCE
+// GET ALL ATTENDANCE
 // ==========================================
 
 export const getAttendance = async () => {
@@ -128,8 +164,9 @@ export const getAttendance = async () => {
       `${API_URL}/api/attendance`
     );
 
-    const data =
-      await response.json();
+
+    const data = await response.json();
+
 
     if (!response.ok) {
 
@@ -140,7 +177,9 @@ export const getAttendance = async () => {
 
     }
 
+
     return data;
+
 
   } catch (error) {
 
@@ -155,10 +194,10 @@ export const getAttendance = async () => {
 
 
 // ==========================================
-// DASHBOARD DATA
+// GET DASHBOARD DATA
 // ==========================================
 
-export const getDashboardData = async () => {
+export const getDashboard = async () => {
 
   try {
 
@@ -166,8 +205,9 @@ export const getDashboardData = async () => {
       `${API_URL}/api/dashboard`
     );
 
-    const data =
-      await response.json();
+
+    const data = await response.json();
+
 
     if (!response.ok) {
 
@@ -178,7 +218,9 @@ export const getDashboardData = async () => {
 
     }
 
+
     return data;
+
 
   } catch (error) {
 

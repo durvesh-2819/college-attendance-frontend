@@ -1,80 +1,129 @@
 import { useEffect, useState } from "react";
-import { testBackend } from "../services/api";
+import {
+  testBackend,
+  getDashboard,
+} from "../services/api";
+
 import "../css/Dashboard.css";
+
 import { useNavigate } from "react-router-dom";
 
+
 function Dashboard() {
+
+  const navigate = useNavigate();
+
+
+  // ==========================================
+  // BACKEND STATUS
+  // ==========================================
+
+  const [backendMessage, setBackendMessage] =
+    useState("Connecting...");
+
 
   // ==========================================
   // DASHBOARD DATA
   // ==========================================
-  const navigate = useNavigate();
 
-  const [backendMessage, setBackendMessage] = useState("Connecting...");
+  const [dashboardData, setDashboardData] =
+    useState({
 
-  const [dashboardData, setDashboardData] = useState({
-    totalStudents: 0,
-    present: 0,
-    absent: 0,
-    attendancePercentage: 0,
-  });
+      totalStudents: 0,
 
-  const [loading, setLoading] = useState(true);
+      present: 0,
+
+      absent: 0,
+
+      attendancePercentage: 0,
+
+    });
+
+
+  const [loading, setLoading] =
+    useState(true);
 
 
   // ==========================================
-  // GET DASHBOARD DATA
+  // LOAD DASHBOARD
   // ==========================================
 
   useEffect(() => {
 
-    // Test backend
-    testBackend()
-      .then((data) => {
-        setBackendMessage(data.message);
-      })
-      .catch((error) => {
-        console.error(error);
-        setBackendMessage("Backend connection failed");
-      });
+    const loadDashboard = async () => {
+
+      try {
+
+        // --------------------------------------
+        // TEST BACKEND
+        // --------------------------------------
+
+        const backend =
+          await testBackend();
+
+        setBackendMessage(
+          backend.message ||
+          "Backend connected"
+        );
 
 
-    // Get dashboard statistics
-    fetch("http://127.0.0.1:5000/api/dashboard")
-      .then((response) => {
+        // --------------------------------------
+        // GET DASHBOARD DATA
+        // --------------------------------------
 
-        if (!response.ok) {
-          throw new Error("Dashboard API failed");
-        }
+        const data =
+          await getDashboard();
 
-        return response.json();
-      })
 
-      .then((data) => {
+        console.log(
+          "Dashboard Data:",
+          data
+        );
 
-        console.log("Dashboard Data:", data);
 
         if (data.success) {
 
           setDashboardData({
-            totalStudents: data.totalStudents,
-            present: data.present,
-            absent: data.absent,
+
+            totalStudents:
+              data.totalStudents || 0,
+
+            present:
+              data.present || 0,
+
+            absent:
+              data.absent || 0,
+
             attendancePercentage:
-              data.attendancePercentage,
+              data.attendancePercentage || 0,
+
           });
 
         }
 
+
+      } catch (error) {
+
+        console.error(
+          "Dashboard Error:",
+          error
+        );
+
+        setBackendMessage(
+          "Backend connection failed"
+        );
+
+
+      } finally {
+
         setLoading(false);
-      })
 
-      .catch((error) => {
+      }
 
-        console.error("Dashboard Error:", error);
+    };
 
-        setLoading(false);
-      });
+
+    loadDashboard();
 
   }, []);
 
@@ -83,11 +132,15 @@ function Dashboard() {
   // TODAY DATE
   // ==========================================
 
-  const today = new Date().toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  const today =
+    new Date().toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    );
 
 
   // ==========================================
@@ -95,15 +148,22 @@ function Dashboard() {
   // ==========================================
 
   return (
+
     <div className="dashboard-page">
 
-      {/* Background decoration */}
+
+      {/* ==================================
+          BACKGROUND
+      ================================== */}
 
       <div className="glow glow-one"></div>
+
       <div className="glow glow-two"></div>
 
 
-      {/* Navbar */}
+      {/* ==================================
+          NAVBAR
+      ================================== */}
 
       <nav className="dashboard-navbar">
 
@@ -113,11 +173,17 @@ function Dashboard() {
             CA
           </div>
 
+
           <div>
 
-            <h2 style={{ color: "#160101" }}>
+            <h2
+              style={{
+                color: "#160101",
+              }}
+            >
               College Attendance
             </h2>
+
 
             <span>
               Management System
@@ -139,12 +205,16 @@ function Dashboard() {
       </nav>
 
 
-      {/* Main content */}
+      {/* ==================================
+          MAIN CONTENT
+      ================================== */}
 
       <main className="dashboard-content">
 
 
-        {/* Welcome */}
+        {/* ==================================
+            WELCOME
+        ================================== */}
 
         <section className="welcome-section">
 
@@ -155,7 +225,11 @@ function Dashboard() {
             </span>
 
 
-            <h1 style={{ color: "#160101" }}>
+            <h1
+              style={{
+                color: "#160101",
+              }}
+            >
 
               Attendance
 
@@ -168,8 +242,8 @@ function Dashboard() {
 
             <p>
 
-              Manage students, classes and daily attendance
-              from one powerful dashboard.
+              Manage students, classes and daily
+              attendance from one powerful dashboard.
 
             </p>
 
@@ -181,6 +255,7 @@ function Dashboard() {
             <span>
               Today
             </span>
+
 
             <strong>
               {today}
@@ -206,11 +281,13 @@ function Dashboard() {
               ST
             </div>
 
+
             <div>
 
               <span>
                 Total Students
               </span>
+
 
               <h2>
 
@@ -221,6 +298,7 @@ function Dashboard() {
               </h2>
 
             </div>
+
 
             <div className="card-arrow">
               →
@@ -237,11 +315,13 @@ function Dashboard() {
               PR
             </div>
 
+
             <div>
 
               <span>
                 Present Today
               </span>
+
 
               <h2>
 
@@ -252,6 +332,7 @@ function Dashboard() {
               </h2>
 
             </div>
+
 
             <div className="card-arrow">
               →
@@ -268,11 +349,13 @@ function Dashboard() {
               AB
             </div>
 
+
             <div>
 
               <span>
                 Absent Today
               </span>
+
 
               <h2>
 
@@ -283,6 +366,7 @@ function Dashboard() {
               </h2>
 
             </div>
+
 
             <div className="card-arrow">
               →
@@ -299,11 +383,13 @@ function Dashboard() {
               CL
             </div>
 
+
             <div>
 
               <span>
                 Total Classes
               </span>
+
 
               <h2>
                 4
@@ -311,17 +397,19 @@ function Dashboard() {
 
             </div>
 
+
             <div className="card-arrow">
               →
             </div>
 
           </div>
 
+
         </section>
 
 
         {/* ==================================
-            ATTENDANCE PERCENTAGE
+            ATTENDANCE PERFORMANCE
         ================================== */}
 
         <section className="section-heading">
@@ -331,6 +419,7 @@ function Dashboard() {
             <span>
               TODAY'S OVERVIEW
             </span>
+
 
             <h2>
               Attendance Performance
@@ -349,11 +438,13 @@ function Dashboard() {
               %
             </div>
 
+
             <div>
 
               <span>
                 TODAY'S ATTENDANCE
               </span>
+
 
               <h3>
 
@@ -391,6 +482,7 @@ function Dashboard() {
               QUICK ACTIONS
             </span>
 
+
             <h2>
               Manage Attendance
             </h2>
@@ -402,14 +494,20 @@ function Dashboard() {
 
         <section className="action-grid">
 
-<div
-  className="action-card"
-  onClick={() => navigate("/select-class")}
->
+
+          {/* SELECT CLASS */}
+
+          <div
+            className="action-card"
+            onClick={() =>
+              navigate("/select-class")
+            }
+          >
 
             <div className="action-icon">
               ＋
             </div>
+
 
             <div>
 
@@ -417,11 +515,13 @@ function Dashboard() {
                 Select Class
               </h3>
 
+
               <p>
                 Choose a class to manage students
               </p>
 
             </div>
+
 
             <span className="action-arrow">
               ↗
@@ -429,14 +529,20 @@ function Dashboard() {
 
           </div>
 
-<div
-  className="action-card"
-  onClick={() => navigate("/select-class")}
->
+
+          {/* MARK ATTENDANCE */}
+
+          <div
+            className="action-card"
+            onClick={() =>
+              navigate("/select-class")
+            }
+          >
 
             <div className="action-icon">
               ✓
             </div>
+
 
             <div>
 
@@ -444,11 +550,13 @@ function Dashboard() {
                 Mark Attendance
               </h3>
 
+
               <p>
                 Mark today's student attendance
               </p>
 
             </div>
+
 
             <span className="action-arrow">
               ↗
@@ -457,14 +565,19 @@ function Dashboard() {
           </div>
 
 
+          {/* REPORTS */}
+
           <div
-  className="action-card"
-  onClick={() => navigate("/reports")}
->
+            className="action-card"
+            onClick={() =>
+              navigate("/reports")
+            }
+          >
 
             <div className="action-icon">
               ▣
             </div>
+
 
             <div>
 
@@ -472,11 +585,13 @@ function Dashboard() {
                 View Reports
               </h3>
 
+
               <p>
                 Check attendance reports
               </p>
 
             </div>
+
 
             <span className="action-arrow">
               ↗
@@ -500,11 +615,13 @@ function Dashboard() {
               ⌁
             </div>
 
+
             <div>
 
               <span>
                 BACKEND STATUS
               </span>
+
 
               <h3>
                 {backendMessage}
@@ -529,7 +646,9 @@ function Dashboard() {
       </main>
 
     </div>
+
   );
+
 }
 
 
